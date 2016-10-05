@@ -51,5 +51,8 @@
     "fantasy land",
     "algebraic types",
     "functional programming"
-  ]
+  ],
+  "dependencies": {
+    "fun-task": "1.5.1"
+  }
 }

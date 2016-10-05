@@ -2,6 +2,7 @@
 import { HKT } from './HKT'
 import type { HKT2 } from './HKT'
 import type { Semigroupoid } from './Semigroupoid'
+import type { Semigroup } from './Semigroup'
 import type { Functor } from './Functor'
 import type { Bifunctor } from './Bifunctor'
 import type { Extend } from './Extend'
@@ -48,6 +49,14 @@ export function extend<X, A, B>(f: (ea: Tuple<X, A>) => B, ea: Tuple<X, A>): Tup
   return inj([t[0], f(ea)])
 }
 
+export function concat<A, B, MA: Semigroup<A>, MB: Semigroup<B>>(ma: MA, mb: MB): (ab: Tuple<A, B>, aabb: Tuple<A, B>) => Tuple<A, B> {
+  return (ab, aabb) => {
+    const t = prj(ab)
+    const tt = prj(aabb)
+    return inj([ma.concat(t[0], tt[0]), mb.concat(t[1], tt[1])])
+  }
+}
+
 export const extract = snd
 
 if (false) { // eslint-disable-line
@@ -63,3 +72,5 @@ if (false) { // eslint-disable-line
      Extend<HKT<IsTuple, *>> &
      Comonad<HKT<IsTuple, *>>)
 }
+
+(<A, B>(ma: Semigroup<A>, mb: Semigroup<B>) => ({ concat: concat(ma, mb) }: Semigroup<Tuple<*, *>>))
